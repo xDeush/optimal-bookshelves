@@ -1,5 +1,7 @@
 # Enchanting Table Calculator
 
+**Live: [optimalbookshelves.online](https://optimalbookshelves.online)**
+
 How many bookshelves should you put around the enchanting table to roll a specific enchantment?
 Pick an item, material, enchantment and level, and the calculator shows the chance for every
 bookshelf count from 0 to 15 and which count gives the best chance.
@@ -15,22 +17,7 @@ Minecraft Java Edition 1.21.11+. Data and simulation by **xDeush**
 - Built with the game's own textures, GUI sprites, font and enchantment glint, so it looks like the game.
 - Keyboard: `/` search, `-` and `+` change bookshelves, arrow keys move through grids.
 
-## Running locally
-
-It's a static site with no build step:
-
-```bash
-python -m http.server 8000
-```
-
-Then open http://localhost:8000.
-
-## Deploying
-
-Any static host works. On GitHub Pages: push the folder to a repository, then go to
-**Settings > Pages** and serve from the branch root. A custom domain can be added on the same page.
-
-## Regenerating data and assets
+## Updating for a new Minecraft version
 
 `tools/` contains the scripts that produced `data.js`, the textures and the font:
 
