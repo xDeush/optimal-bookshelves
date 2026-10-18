@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enchanting Table Calculator by xDeush</title>
+<meta name="description" content="Minecraft enchanting table calculator (Java 1.21.11+). Find how many bookshelves give the best chance for any enchantment, item and level. Data by xDeush.">
+<meta property="og:title" content="Enchanting Table Calculator by xDeush">
+<meta property="og:description" content="How many bookshelves should you place to roll a specific enchantment? Chances for every item, material and level.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#c6c6c6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111014" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" href="assets/enchanted_book.png">
+<link rel="stylesheet" href="style.css">
+<script>
+  try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="./">
+      <span class="brand-icon"><img src="assets/enchanting_table_side.png" alt=""></span>
+      <span>
+        <span class="brand-name">Enchanting Calculator</span><br>
+        <span class="brand-by" data-i18n-html="by"></span>
+      </span>
+    </a>
+    <div class="top-actions">
+      <div class="seg" role="group" aria-label="Language">
+        <button type="button" data-lang="pl">PL</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <button type="button" class="btn" id="themeBtn"><img src="assets/lapis_lazuli.png" alt=""><span class="txt" data-i18n="theme"></span></button>
+      <a class="btn" id="sheetBtn" href="xDeush-Enchanting-Table-Calculator.xlsx" download><img src="assets/book.png" alt=""><span class="txt" data-i18n="sheet"></span></a>
+    </div>
+  </header>
+
+  <section class="intro">
+    <h1 data-i18n="h1"></h1>
+    <p data-i18n="lead"></p>
+  </section>
+
+  <main class="app">
+    <div class="config">
+      <section class="panel step" aria-labelledby="h-item">
+        <h2 id="h-item"><span data-i18n="sItem"></span></h2>
+        <div class="items" id="items"></div>
+      </section>
+
+      <section class="panel step" id="matStep" aria-labelledby="h-mat">
+        <h2 id="h-mat"><span data-i18n="sMat"></span></h2>
+        <div class="grid-items" id="mats"></div>
+        <div class="pick-label" id="matLabel"></div>
+      </section>
+
+      <section class="panel step" aria-labelledby="h-ench">
+        <h2 id="h-ench"><span data-i18n="sEnch"></span><span class="hint" id="enchCount"></span></h2>
+        <div class="ench-tools">
+          <input class="search" id="search" type="search" autocomplete="off" aria-labelledby="h-ench">
+        </div>
+        <div class="ench-list" id="enchs"></div>
+        <button type="button" class="ench-off-toggle" id="offToggle"></button>
+        <div class="ench-list" id="enchsOff" hidden></div>
+      </section>
+
+      <section class="panel step" aria-labelledby="h-lvl">
+        <h2 id="h-lvl"><span data-i18n="sLvl"></span></h2>
+        <div class="levels" id="lvls"></div>
+      </section>
+    </div>
+
+    <aside class="panel result" aria-labelledby="resEnch">
+      <div class="res-head">
+        <div class="slot res-icon"><canvas class="gl res-gl" id="resImg" data-src="assets/diamond_sword.png" aria-hidden="true"></canvas></div>
+        <div class="res-title">
+          <div class="res-item" id="resItem"></div>
+          <div class="res-ench" id="resEnch"></div>
+        </div>
+      </div>
+
+      <div class="slot best">
+        <div class="best-k" data-i18n="kBest"></div>
+        <div class="best-row">
+          <span class="best-icon" aria-hidden="true"></span>
+          <span class="best-n" id="vBest"></span>
+          <span class="best-u" id="bestUnit"></span>
+          <button type="button" class="btn best-set" id="setBest"></button>
+        </div>
+        <div class="best-s" id="sBest"></div>
+      </div>
+
+      <section class="mine" aria-labelledby="mineH">
+        <h3 class="mine-h" id="mineH" data-i18n="yourSetup"></h3>
+        <div class="shelves">
+          <div class="slot ring" id="ring" role="group"></div>
+          <div class="shelf-ctl">
+            <span class="lbl" id="shelvesLbl" data-i18n="shelves"></span>
+            <div class="stepper">
+              <button type="button" id="minus">-</button>
+              <output id="shelfOut">15</output>
+              <button type="button" id="plus">+</button>
+            </div>
+            <input class="range" id="range" type="range" min="0" max="15" step="1" aria-labelledby="shelvesLbl">
+            <div class="mine-res">
+              <span class="mine-v" id="vCur"></span>
+              <span class="mine-s" id="sCur"></span>
+            </div>
+          </div>
+        </div>
+        <div class="verdict" id="verdict" aria-live="polite"></div>
+      </section>
+
+      <div class="chart-wrap">
+        <div class="chart-cap"><span data-i18n="chartCap"></span><span id="chartMax"></span></div>
+        <div class="slot">
+          <div class="chart" id="chart" role="group"></div>
+          <div class="chart-x" id="chartX"></div>
+        </div>
+        <div class="chart-legend">
+          <span><b style="background:var(--accent)"></b><span data-i18n="lgCur"></span></span>
+          <span><b style="background:var(--gold);box-shadow:0 0 0 2px #000"></b><span data-i18n="lgBest"></span></span>
+        </div>
+      </div>
+
+      <details class="details">
+        <summary data-i18n="details"></summary>
+        <dl id="dl"></dl>
+      </details>
+    </aside>
+  </main>
+
+  <section class="section" aria-labelledby="h-heat">
+    <h2 id="h-heat"></h2>
+    <p data-i18n="heatLead"></p>
+    <div class="panel heat-panel"><table class="heat" id="heat"></table></div>
+  </section>
+
+  <section class="section" aria-labelledby="h-how">
+    <h2 id="h-how" data-i18n="howH"></h2>
+    <div class="how">
+      <ol id="howList"></ol>
+      <div class="panel how-art">
+        <div class="scene" id="scene" aria-hidden="true"></div>
+        <p data-i18n="sceneCap"></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span data-i18n-html="foot1"></span>
+    <span data-i18n="foot2"></span>
+    <span class="keys" data-i18n="keysHint"></span>
+  </footer>
+</div>
+<button type="button" class="sum-bar off" id="sumBar">
+  <canvas class="gl" id="sumImg" data-src="assets/diamond_sword.png" aria-hidden="true"></canvas>
+  <span class="sum-t"><span id="sumName"></span><span id="sumBest"></span></span>
+  <span class="sum-v" id="sumVal"></span>
+</button>
+<div class="mc-tip" id="tip" role="tooltip"></div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
