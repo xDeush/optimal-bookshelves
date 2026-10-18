@@ -393,24 +393,13 @@ canvas.gl { display: block; image-rendering: pixelated; }
   transform: scaleY(var(--h, 0));
 }
 .bar:hover i { background: color-mix(in srgb, var(--accent) 50%, var(--bar)); }
-.bar.cur i { background: var(--accent); }
-.bar.best::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: calc(var(--h, 0) * 100% + 4px);
-  width: 8px;
-  height: 8px;
-  margin-left: -4px;
-  background: var(--gold);
-  box-shadow: 0 0 0 2px #000;
-}
+/* Best count is always blue; a previewed other count is drawn light. */
+.bar.best i { background: var(--accent); }
+.bar.cur:not(.best) i { background: #e0e0e0; }
 .chart-x { display: grid; grid-template-columns: repeat(16, 1fr); gap: 3px; padding: 4px 8px 6px; font-size: 16px; line-height: 1; text-align: center; }
 .chart-x span { display: flex; justify-content: center; white-space: nowrap; padding: 2px 0; }
-.chart-x span.cur { background: var(--accent); color: var(--accent-ink); text-shadow: none; }
-.chart-legend { display: flex; gap: 16px; color: var(--ink-mute); margin-top: 8px; flex-wrap: wrap; }
-.chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
-.chart-legend b { width: 10px; height: 10px; display: inline-block; }
+.chart-x span.best { background: var(--accent); color: var(--accent-ink); text-shadow: none; }
+.chart-x span.cur:not(.best) { background: #e0e0e0; color: #1a1a1a; text-shadow: none; }
 
 .details { margin-top: 16px; color: var(--ink-soft); }
 .details summary { cursor: pointer; color: var(--ink); }
@@ -530,7 +519,7 @@ footer .keys { flex-basis: 100%; }
   .stepper { justify-content: center; }
   .chart { height: 130px; gap: 2px; padding: 16px 6px 0; }
   .chart-x { gap: 2px; padding: 4px 6px 6px; }
-  .chart-x span:not(.tick):not(.cur) { visibility: hidden; }
+  .chart-x span:not(.tick):not(.cur):not(.best) { visibility: hidden; }
   .lvl { width: 72px; }
   .sum-v { font-size: 16px; }
   .heat-panel { padding: 6px; }

@@ -410,7 +410,11 @@
       const cls = ["bar", i === n ? "cur" : "", possible && i === r[0] ? "best" : ""].join(" ");
       return `<button type="button" class="${cls}" data-bar="${i}" tabindex="-1" style="--h:${h.toFixed(4)}" aria-label="${i}: ${pct(val)}" data-tip="<div class='t1'>${esc(L.shelfAria(i))}</div><div class='g'>${pct(val)}</div>"><i></i></button>`;
     }).join(""));
-    patch($("chartX"), arr.map((_, i) => `<span class="${i === n ? "cur" : i % 5 === 0 && Math.abs(i - n) > 1 ? "tick" : ""}">${i}</span>`).join(""));
+    const bestN = possible ? r[0] : -1;
+    patch($("chartX"), arr.map((_, i) => {
+      const cls = [i === n ? "cur" : "", i === bestN ? "best" : "", i % 5 === 0 && Math.abs(i - n) > 1 && Math.abs(i - bestN) > 1 ? "tick" : ""].join(" ").trim();
+      return `<span class="${cls}">${i}</span>`;
+    }).join(""));
     renderSummary(possible ? pct(r[1]) : "0%", possible ? r[0] : null);
 
     const E = enchantability();
