@@ -544,7 +544,7 @@ footer .keys { flex-basis: 100%; }
 }
 
 /* ---------- Best setup ---------- */
-.best { padding: 12px 14px 14px; margin-bottom: 20px; }
+.best-box { padding: 12px 14px 14px; margin-bottom: 20px; }
 .best-k { color: #c8c8c8; }
 .best-row { display: flex; align-items: center; gap: 12px; margin-top: 6px; flex-wrap: wrap; }
 .best-icon { width: 40px; height: 40px; flex: none; background: url("assets/bookshelf.png") 0 0 / 100% 100%; image-rendering: pixelated; }
@@ -555,7 +555,6 @@ footer .keys { flex-basis: 100%; }
 
 /* ---------- Your setup ---------- */
 .mine { margin-bottom: 20px; }
-.mine-h { font-size: 16px; font-weight: 400; color: var(--ink-mute); margin: 0 0 10px; }
 .mine .shelves { margin-bottom: 12px; align-items: start; }
 .mine-res { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .mine-v { font-size: 32px; line-height: 1; color: var(--ink); }
@@ -569,3 +568,9 @@ footer .keys { flex-basis: 100%; }
   .best-u { font-size: 16px; padding-bottom: 2px; }
   .best-set { order: 5; flex-basis: 100%; margin-left: 0; }
 }
+
+/* Preview readout: "back to N" when trying another count */
+.mine-s .back { background: none; border: 0; padding: 0; margin-left: 6px; color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+/* Heatmap: bookshelf count with a bookshelf icon */
+.heat .hc small { display: inline-flex; align-items: center; gap: 4px; }
+.heat .hc .bs { width: 14px; height: 14px; display: inline-block; background: url("assets/bookshelf.png") 0 0 / 100% 100%; image-rendering: pixelated; }

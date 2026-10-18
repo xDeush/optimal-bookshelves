@@ -62,18 +62,16 @@
       none: "Brak wyników.",
       fixedMat: (e) => `Ten przedmiot ma stałą zaklinalność: <strong>${e}</strong>`,
       matPicked: (n, e) => `<strong>${n}</strong>, zaklinalność ${e}`,
-      kCur: (n) => `Szansa przy ${n} ${shelfWord(n)}`,
       kBest: "Najlepsze ustawienie",
-      yourSetup: "Twoje ustawienie",
       unit: (n) => (n === 1 ? "biblioteczka" : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? "biblioteczki" : "biblioteczek"),
-      bestS: (c, one) => `szansa ${c}, ${one}`,
-      setIt: (n) => `Ustaw ${n}`,
-      youHave: "to Twoje ustawienie",
+      bestS: (c, one, rng) => `Szansa ${c}, ${one}. Działa przy ${rng} biblioteczkach.`,
+      backTo: (n) => `wróć do ${n}`,
+      wontShow: "nie wypadnie",
       never: "nigdy",
       shelves: "Biblioteczki wokół stołu",
       chartCap: "Szansa dla 0-15 biblioteczek",
       chartMax: (c) => `max ${c}`,
-      lgCur: "Twoja liczba",
+      lgCur: "Na stole",
       lgBest: "Najlepsza",
       details: "Szczegóły mechaniki",
       dWeight: "Waga zaklęcia",
@@ -84,14 +82,10 @@
       dBook: "Książka",
       dBookV: "jeden losowy enchant jest usuwany z wyniku",
       vNo: "Ten poziom nie wypada ze stołu na tym przedmiocie.",
-      vZero: (n, a, b) => `Przy ${n} ${shelfWord(n)} nie wypadnie. Działa przy ${rangeTxt(a, b)} biblioteczkach.`,
-      vOk: (a, b, best) => `Działa przy ${rangeTxt(a, b)} biblioteczkach. Najwyższa szansa przy ${best}.`,
-      vBest: (a, b) => `To najlepsze ustawienie. Działa przy ${rangeTxt(a, b)} biblioteczkach.`,
       slotNote: "Szansa, że enchant pojawi się w najmocniejszym (3.) slocie stołu.",
       heatH: (n) => `Wszystkie zaklęcia: ${n}`,
-      heatLead: "Duża liczba to szansa przy Twojej liczbie biblioteczek. Pod nią najlepszy wynik @ liczba biblioteczek, która go daje. Wybierz komórkę, żeby ją ustawić.",
+      heatLead: "Najlepsza szansa dla każdego zaklęcia i poziomu, a pod nią liczba biblioteczek, która ją daje. Wybierz komórkę, żeby ją ustawić.",
       heatCol: "Zaklęcie",
-      heatBest: (c, n) => `${c} @${n}`,
       howH: "Jak działa stół do zaklinania",
       how: [
         ["Budżet", "Stół losuje budżet (zmodyfikowany poziom) dla najmocniejszego slotu. Więcej biblioteczek to wyższy budżet, maksymalnie przy 15."],
@@ -137,18 +131,16 @@
       none: "No matches.",
       fixedMat: (e) => `This item has a fixed enchantability: <strong>${e}</strong>`,
       matPicked: (n, e) => `<strong>${n}</strong>, enchantability ${e}`,
-      kCur: (n) => `Chance with ${n} ${n === 1 ? "bookshelf" : "bookshelves"}`,
       kBest: "Best setup",
-      yourSetup: "Your setup",
       unit: (n) => (n === 1 ? "bookshelf" : "bookshelves"),
-      bestS: (c, one) => `${c} chance, ${one}`,
-      setIt: (n) => `Use ${n}`,
-      youHave: "that's your setup",
+      bestS: (c, one, rng) => `${c} chance, ${one}. Works with ${rng} bookshelves.`,
+      backTo: (n) => `back to ${n}`,
+      wontShow: "won't show up",
       never: "never",
       shelves: "Bookshelves around the table",
       chartCap: "Chance for 0-15 bookshelves",
       chartMax: (c) => `max ${c}`,
-      lgCur: "Your count",
+      lgCur: "On the table",
       lgBest: "Best",
       details: "Mechanics details",
       dWeight: "Enchantment weight",
@@ -159,14 +151,10 @@
       dBook: "Book",
       dBookV: "one random enchantment is removed from the result",
       vNo: "This level never comes from the table on this item.",
-      vZero: (n, a, b) => `It won't show up with ${n} ${n === 1 ? "bookshelf" : "bookshelves"}. Works with ${rangeTxt(a, b)} bookshelves.`,
-      vOk: (a, b, best) => `Works with ${rangeTxt(a, b)} bookshelves. Highest chance at ${best}.`,
-      vBest: (a, b) => `That's the best setup. Works with ${rangeTxt(a, b)} bookshelves.`,
       slotNote: "Chance that the enchantment shows up in the strongest (3rd) table slot.",
       heatH: (n) => `Every enchantment: ${n}`,
-      heatLead: "The big number is the chance at your bookshelf count. Below it: the best result @ the bookshelf count that gives it. Pick a cell to select it.",
+      heatLead: "The best chance for every enchantment and level, with the bookshelf count that gives it below. Pick a cell to select it.",
       heatCol: "Enchantment",
-      heatBest: (c, n) => `${c} @${n}`,
       howH: "How the enchanting table works",
       how: [
         ["Budget", "The table rolls a budget (modified level) for the strongest slot. More bookshelves means a higher budget, capped at 15."],
@@ -360,7 +348,7 @@
     for (let l = 1; l <= e.max; l++) {
       const r = row(state.item, state.ench, l);
       const can = ok.includes(l);
-      const now = can ? pct(r[2 + state.shelves]) : "-";
+      const now = can ? pct(r[1]) : "-";
       html += `<button type="button" class="lvl" data-lvl="${l}" aria-pressed="${l === state.lvl}" ${can ? "" : "disabled"} aria-label="${esc(enchName(state.ench))} ${ROMAN[l]}: ${now}${can ? ", " + esc(L.lvlTip(pct(r[1]), r[0])) : ""}" data-tip="<div class='t1'>${esc(enchName(state.ench))} ${ROMAN[l]}</div><div class='g'>${can ? L.lvlTip(pct(r[1]), r[0]) : L.never}</div>"><span>${ROMAN[l]}<small>${now}</small></span></button>`;
     }
     patch($("lvls"), html);
@@ -391,32 +379,23 @@
     $("resEnch").classList.toggle("never", !possible);
 
     const oneIn = (x) => (x > 0 ? L.oneIn(Math.max(1, Math.round(1 / x))) : "");
-    $("vCur").textContent = possible ? pct(arr[n]) : "0%";
-    $("sCur").textContent = possible && arr[n] > 0 ? oneIn(arr[n]) : "";
-    $("vCur").classList.toggle("zero", !possible || arr[n] === 0);
-    const sb = $("setBest");
     if (possible) {
       $("vBest").textContent = r[0];
       $("bestUnit").textContent = L.unit(r[0]);
-      $("sBest").textContent = L.bestS(pct(r[1]), oneIn(r[1]));
-      sb.textContent = L.setIt(r[0]);
-      sb.hidden = r[0] === n;
+      $("sBest").textContent = L.bestS(pct(r[1]), oneIn(r[1]), rangeTxt(nz[0], nz[nz.length - 1]));
     } else {
       $("vBest").textContent = "-";
       $("bestUnit").textContent = "";
       $("sBest").textContent = L.vNo;
-      sb.hidden = true;
     }
 
-    const v = $("verdict");
-    v.classList.toggle("no", !possible || arr[n] === 0);
-    if (!possible) v.textContent = L.vNo;
-    else {
-      const a = nz[0], b = nz[nz.length - 1];
-      if (arr[n] === 0) v.textContent = L.vZero(n, a, b);
-      else if (r[0] === n) v.textContent = L.vBest(a, b);
-      else v.textContent = L.vOk(a, b, r[0]);
-    }
+    // Preview readout: the table shows the best count unless the user is trying another one.
+    $("vCur").textContent = possible ? pct(arr[n]) : "0%";
+    $("vCur").classList.toggle("zero", !possible || arr[n] === 0);
+    const off = possible && n !== r[0];
+    $("vCur").closest(".mine-res").hidden = !off && possible;
+    patch($("sCur"), (possible && arr[n] > 0 ? esc(oneIn(arr[n])) : esc(L.wontShow)) +
+      (off ? ` <button type="button" class="back" id="backBest">${esc(L.backTo(r[0]))}</button>` : ""));
 
     $("shelfOut").textContent = n;
     $("range").value = n;
@@ -432,7 +411,7 @@
       return `<button type="button" class="${cls}" data-bar="${i}" tabindex="-1" style="--h:${h.toFixed(4)}" aria-label="${i}: ${pct(val)}" data-tip="<div class='t1'>${esc(L.shelfAria(i))}</div><div class='g'>${pct(val)}</div>"><i></i></button>`;
     }).join(""));
     patch($("chartX"), arr.map((_, i) => `<span class="${i === n ? "cur" : i % 5 === 0 && Math.abs(i - n) > 1 ? "tick" : ""}">${i}</span>`).join(""));
-    renderSummary(possible ? pct(arr[n]) : "0%", possible ? r[0] : null);
+    renderSummary(possible ? pct(r[1]) : "0%", possible ? r[0] : null);
 
     const E = enchantability();
     const lv = D.ench[state.ench].levels[state.lvl];
@@ -441,7 +420,6 @@
       [L.dWeight, D.ench[state.ench].weight],
       [L.dCost, lv ? `${lv[2]}-${lv[3]}` : "-"],
       [L.dBudget(n), `${minBudget(n)}-${maxBudget(n, E)}`],
-      [L.dRange, possible ? rangeTxt(nz[0], nz[nz.length - 1]) : L.never],
     ];
     if (state.item === "book") dl.push([L.dBook, L.dBookV]);
     patch($("dl"), dl.map(([k, val]) => `<dt>${k}</dt><dd>${val}</dd>`).join("") + `<dt></dt><dd>${L.slotNote}</dd>`);
@@ -450,16 +428,15 @@
   function renderSummary(cur, best) {
     $("sumImg").dataset.src = `assets/${currentIcon()}.png`;
     $("sumName").textContent = `${enchName(state.ench)} ${ROMAN[state.lvl]}`;
-    $("sumVal").textContent = `${cur} @${state.shelves}`;
-    $("sumBest").textContent = best == null ? L.never : `${L.lgBest}: ${best}`;
+    $("sumVal").textContent = cur;
+    $("sumBest").textContent = best == null ? L.never : `${best} ${L.unit(best)}`;
   }
 
   function renderHeat() {
     $("h-heat").textContent = L.heatH(itemName(state.item, state.mat));
     const list = sortByName(offered(state.item));
-    const n = state.shelves;
     let peak = 0;
-    for (const e of list) for (let l = 1; l <= D.ench[e].max; l++) { const r = row(state.item, e, l); if (r) peak = Math.max(peak, r[2 + n]); }
+    for (const e of list) for (let l = 1; l <= D.ench[e].max; l++) { const r = row(state.item, e, l); if (r) peak = Math.max(peak, r[1]); }
     let html = `<thead><tr><th>${L.heatCol}</th>${[1, 2, 3, 4, 5].map((l) => `<th>${ROMAN[l]}</th>`).join("")}</tr></thead><tbody>`;
     for (const e of list) {
       html += `<tr><td class="n"><div><canvas class="gl" data-src="assets/enchanted_book.png" aria-hidden="true"></canvas>${esc(enchName(e))}</div></td>`;
@@ -467,10 +444,10 @@
         if (l > D.ench[e].max) { html += `<td class="empty"></td>`; continue; }
         const r = row(state.item, e, l);
         const has = r && r[1] > 0;
-        const val = has ? r[2 + n] : 0;
+        const val = has ? r[1] : 0;
         const a = peak > 0 ? (val / peak) * 0.9 : 0;
         const sel = e === state.ench && l === state.lvl ? " sel" : "";
-        html += `<td class="v"><button type="button" class="slot hc${sel}" style="--a:${a.toFixed(3)}" ${has ? `data-pick="${e}|${l}"` : "disabled"} aria-label="${esc(enchName(e))} ${ROMAN[l]}: ${pct(val)}"><b>${has ? pct(val) : "-"}</b><small>${has ? L.heatBest(pct(r[1]), r[0]) : L.never}</small></button></td>`;
+        html += `<td class="v"><button type="button" class="slot hc${sel}" style="--a:${a.toFixed(3)}" ${has ? `data-pick="${e}|${l}"` : "disabled"} aria-label="${esc(enchName(e))} ${ROMAN[l]}: ${pct(val)}${has ? ", " + r[0] + " " + esc(L.unit(r[0])) : ""}"><b>${has ? pct(val) : "-"}</b><small>${has ? `<i class="bs"></i>${r[0]}` : L.never}</small></button></td>`;
       }
       html += `</tr>`;
     }
@@ -501,9 +478,13 @@
     if (!lv.includes(state.lvl)) state.lvl = lv.length ? lv.reduce((best, l) => (Math.abs(l - state.lvl) < Math.abs(best - state.lvl) ? l : best), lv[0]) : 1;
     state.shelves = Math.max(0, Math.min(15, state.shelves | 0));
   }
+  function bestShelves() {
+    const r = row(state.item, state.ench, state.lvl);
+    return r && r[1] > 0 ? r[0] : null;
+  }
 
   function writeHash() {
-    const p = new URLSearchParams({ item: state.item, mat: state.mat, e: state.ench, l: state.lvl, b: state.shelves });
+    const p = new URLSearchParams({ item: state.item, mat: state.mat, e: state.ench, l: state.lvl });
     history.replaceState(null, "", "#" + p.toString());
   }
   function readHash() {
@@ -512,11 +493,12 @@
     if (p.get("mat")) state.mat = p.get("mat");
     if (D.ench[p.get("e")]) state.ench = p.get("e");
     if (p.get("l")) state.lvl = +p.get("l") || 1;
-    if (p.get("b") != null && p.get("b") !== "") state.shelves = +p.get("b");
   }
 
-  function update(parts) {
+  // preview = true keeps the bookshelf count the user is trying; anything else snaps to the best one.
+  function update(parts, preview = false) {
     normalize();
+    if (!preview) { const b = bestShelves(); if (b != null) state.shelves = b; }
     if (parts.includes("items")) renderItems();
     if (parts.includes("mats")) renderMats();
     if (parts.includes("enchs")) renderEnchs();
@@ -535,23 +517,23 @@
     else if (t.dataset.mat) { state.mat = t.dataset.mat; update(ALL); }
     else if (t.dataset.ench) { state.ench = state.want = t.dataset.ench; update(["enchs", "lvls"]); }
     else if (t.dataset.lvl) { state.lvl = +t.dataset.lvl; update(["lvls"]); }
-    else if (t.dataset.ring != null) { const k = +t.dataset.ring; state.shelves = state.shelves === k + 1 ? k : k + 1; update(["lvls"]); }
-    else if (t.dataset.bar != null) { state.shelves = +t.dataset.bar; update(["lvls"]); }
+    else if (t.dataset.ring != null) { const k = +t.dataset.ring; state.shelves = state.shelves === k + 1 ? k : k + 1; update([], true); }
+    else if (t.dataset.bar != null) { state.shelves = +t.dataset.bar; update([], true); }
     else if (t.dataset.pick) {
       const [e, l] = t.dataset.pick.split("|");
       state.ench = state.want = e; state.lvl = +l; update(["enchs", "lvls"]);
       if (innerWidth <= 960) document.querySelector(".result").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
       else window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     }
-    else if (t.id === "setBest") { const r = row(state.item, state.ench, state.lvl); if (r) { state.shelves = r[0]; update(["lvls"]); } }
-    else if (t.id === "minus") { state.shelves--; update(["lvls"]); }
-    else if (t.id === "plus") { state.shelves++; update(["lvls"]); }
+    else if (t.id === "backBest") { update([]); }
+    else if (t.id === "minus") { state.shelves--; update([], true); }
+    else if (t.id === "plus") { state.shelves++; update([], true); }
     else if (t.id === "offToggle") { state.showOff = !state.showOff; renderEnchs(); }
     else if (t.dataset.lang) { setLang(t.dataset.lang); }
     else if (t.id === "themeBtn") { toggleTheme(); }
     else if (t.id === "sumBar") { document.querySelector(".result").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }); }
   });
-  $("range").addEventListener("input", (ev) => { state.shelves = +ev.target.value; update(["lvls"]); });
+  $("range").addEventListener("input", (ev) => { state.shelves = +ev.target.value; update([], true); });
   $("search").addEventListener("input", (ev) => { state.q = ev.target.value.trim(); renderEnchs(); });
   $("search").addEventListener("keydown", (ev) => {
     if (ev.key !== "Enter") return;
@@ -566,7 +548,7 @@
     if (typing) return;
     if (ev.key === "-" || ev.key === "+" || ev.key === "=") {
       const d = ev.key === "-" ? -1 : 1;
-      if ((d < 0 && state.shelves > 0) || (d > 0 && state.shelves < 15)) { state.shelves += d; update(["lvls"]); }
+      if ((d < 0 && state.shelves > 0) || (d > 0 && state.shelves < 15)) { state.shelves += d; update([], true); }
       return;
     }
     if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(ev.key)) return;
