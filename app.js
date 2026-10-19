@@ -34,8 +34,7 @@
   const T = {
     pl: {
       by: "arkusz i dane: <strong>xDeush</strong>",
-      theme: "Motyw",
-      sheet: "Arkusz .xlsx",
+      sheet: "POBIERZ .XLSX",
       h1: "Ile biblioteczek postawić?",
       lead: "Wybierz przedmiot, materiał i enchant. Kalkulator pokaże szansę dla każdej liczby biblioteczek od 0 do 15 i wskaże najlepszą.",
       sItem: "Przedmiot",
@@ -48,7 +47,9 @@
       shelfAria: (k) => `${k} biblioteczek`,
       minusAria: "Jedna biblioteczka mniej",
       plusAria: "Jedna biblioteczka więcej",
-      themeAria: "Przełącz jasny lub ciemny motyw",
+      themeAria: "Motyw",
+      lightAria: "Jasny motyw",
+      darkAria: "Ciemny motyw",
       sheetAria: "Pobierz arkusz .xlsx",
       keysHint: "Skróty: / szukaj, - i + zmienia biblioteczki, strzałki poruszają się po siatce.",
       sEnch: "Zaklęcie",
@@ -103,8 +104,7 @@
     },
     en: {
       by: "spreadsheet and data by <strong>xDeush</strong>",
-      theme: "Theme",
-      sheet: ".xlsx sheet",
+      sheet: "DOWNLOAD .XLSX",
       h1: "How many bookshelves?",
       lead: "Pick an item, material and enchantment. You get the chance for every bookshelf count from 0 to 15 and the best one to use.",
       sItem: "Item",
@@ -117,7 +117,9 @@
       shelfAria: (k) => `${k} bookshelves`,
       minusAria: "One bookshelf less",
       plusAria: "One bookshelf more",
-      themeAria: "Toggle light or dark theme",
+      themeAria: "Theme",
+      lightAria: "Light theme",
+      darkAria: "Dark theme",
       sheetAria: "Download the .xlsx spreadsheet",
       keysHint: "Shortcuts: / search, - and + change bookshelves, arrow keys move through grids.",
       sEnch: "Enchantment",
@@ -285,7 +287,11 @@
     $("search").placeholder = L.search;
     $("minus").setAttribute("aria-label", L.minusAria);
     $("plus").setAttribute("aria-label", L.plusAria);
-    $("themeBtn").setAttribute("aria-label", L.themeAria);
+    $("themeSeg").setAttribute("aria-label", L.themeAria);
+    $("themeLight").setAttribute("aria-label", L.lightAria);
+    $("themeDark").setAttribute("aria-label", L.darkAria);
+    $("themeLight").dataset.tip = `<div>${esc(L.lightAria)}</div>`;
+    $("themeDark").dataset.tip = `<div>${esc(L.darkAria)}</div>`;
     $("sheetBtn").setAttribute("aria-label", L.sheetAria);
     $("ring").setAttribute("aria-label", L.shelves);
     $("chart").setAttribute("aria-label", L.chartCap);
@@ -534,7 +540,7 @@
     else if (t.id === "plus") { state.shelves++; update([], true); }
     else if (t.id === "offToggle") { state.showOff = !state.showOff; renderEnchs(); }
     else if (t.dataset.lang) { setLang(t.dataset.lang); }
-    else if (t.id === "themeBtn") { toggleTheme(); }
+    else if (t.dataset.theme) { setTheme(t.dataset.theme); }
     else if (t.id === "sumBar") { document.querySelector(".result").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }); }
   });
   $("range").addEventListener("input", (ev) => { state.shelves = +ev.target.value; update([], true); });
@@ -590,12 +596,22 @@
     renderStatic();
     update(ALL);
   }
-  function toggleTheme() {
-    const root = document.documentElement;
-    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-    root.dataset.theme = dark ? "light" : "dark";
-    try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+  const darkQuery = matchMedia("(prefers-color-scheme: dark)");
+  function currentTheme() {
+    const t = document.documentElement.dataset.theme;
+    return t || (darkQuery.matches ? "dark" : "light");
   }
+  function showTheme() {
+    const t = currentTheme();
+    $("themeLight").setAttribute("aria-pressed", String(t === "light"));
+    $("themeDark").setAttribute("aria-pressed", String(t === "dark"));
+  }
+  function setTheme(t) {
+    document.documentElement.dataset.theme = t;
+    try { localStorage.setItem("theme", t); } catch (e) {}
+    showTheme();
+  }
+  darkQuery.addEventListener("change", showTheme);
 
 
   // ---------- Enchantment glint ----------
@@ -704,6 +720,7 @@
   addEventListener("hashchange", () => { readHash(); update(ALL); });
   renderScene();
   renderStatic();
+  showTheme();
   update(ALL);
   Glint.start();
 })();

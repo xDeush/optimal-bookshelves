@@ -507,7 +507,6 @@ footer .keys { flex-basis: 100%; }
 @media (max-width: 560px) {
   .top { flex-wrap: wrap; }
   .brand-name { font-size: 16px; }
-  .btn .txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .btn, .seg button { min-height: 44px; min-width: 44px; }
   .step h2 .hint { flex-basis: 100%; }
   /* One compact slot grid on phones; group labels would cost five extra rows. */
@@ -563,3 +562,10 @@ footer .keys { flex-basis: 100%; }
 /* Heatmap: bookshelf count with a bookshelf icon */
 .heat .hc small { display: inline-flex; align-items: center; gap: 4px; }
 .heat .hc .bs { width: 14px; height: 14px; display: inline-block; background: url("assets/bookshelf.png") 0 0 / 100% 100%; image-rendering: pixelated; }
+
+/* Theme switch: white / black dye */
+.theme-seg button { padding: 2px 6px; min-width: 52px; }
+.theme-seg img { width: 32px; height: 32px; }
+@media (max-width: 560px) {
+  .top-actions { flex-wrap: wrap; }
+}
