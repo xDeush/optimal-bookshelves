@@ -558,7 +558,6 @@ footer .keys { flex-basis: 100%; }
 }
 
 /* Preview readout: "back to N" when trying another count */
-.mine-s .back { background: none; border: 0; padding: 0; margin-left: 6px; color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
 /* Heatmap: bookshelf count with a bookshelf icon */
 .heat .hc small { display: inline-flex; align-items: center; gap: 4px; }
 .heat .hc .bs { width: 14px; height: 14px; display: inline-block; background: url("assets/bookshelf.png") 0 0 / 100% 100%; image-rendering: pixelated; }
@@ -569,3 +568,9 @@ footer .keys { flex-basis: 100%; }
 @media (max-width: 560px) {
   .top-actions { flex-wrap: wrap; }
 }
+
+/* Preview readout: fixed size so changing the count never shifts the layout */
+.mine-res { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 40px 22px; align-items: center; column-gap: 10px; }
+.mine-res .mine-v { grid-column: 1; grid-row: 1; }
+.mine-res .back { grid-column: 2; grid-row: 1; min-height: 40px; padding: 4px 10px; }
+.mine-res .mine-s { grid-column: 1 / -1; grid-row: 2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

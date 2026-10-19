@@ -66,7 +66,7 @@
       kBest: "Najlepsze ustawienie",
       unit: (n) => (n === 1 ? "biblioteczka" : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? "biblioteczki" : "biblioteczek"),
       bestS: (c, one, rng) => `Szansa ${c}, ${one}. Działa przy ${rng} biblioteczkach.`,
-      backTo: (n) => `wróć do ${n}`,
+      backTo: (n) => `Wróć do ${n}`,
       wontShow: "nie wypadnie",
       never: "nigdy",
       shelves: "Biblioteczki wokół stołu",
@@ -136,7 +136,7 @@
       kBest: "Best setup",
       unit: (n) => (n === 1 ? "bookshelf" : "bookshelves"),
       bestS: (c, one, rng) => `${c} chance, ${one}. Works with ${rng} bookshelves.`,
-      backTo: (n) => `back to ${n}`,
+      backTo: (n) => `Back to ${n}`,
       wontShow: "won't show up",
       never: "never",
       shelves: "Bookshelves around the table",
@@ -399,9 +399,12 @@
     $("vCur").textContent = possible ? pct(arr[n]) : "0%";
     $("vCur").classList.toggle("zero", !possible || arr[n] === 0);
     const off = possible && n !== r[0];
-    $("vCur").closest(".mine-res").hidden = !off && possible;
-    patch($("sCur"), (possible && arr[n] > 0 ? esc(oneIn(arr[n])) : esc(L.wontShow)) +
-      (off ? ` <button type="button" class="back" id="backBest">${esc(L.backTo(r[0]))}</button>` : ""));
+    $("sCur").textContent = possible && arr[n] > 0 ? oneIn(arr[n]) : L.wontShow;
+    // The button keeps its space when hidden so nothing below jumps.
+    const back = $("backBest");
+    if (possible) back.textContent = L.backTo(r[0]);
+    back.style.visibility = off ? "visible" : "hidden";
+    back.tabIndex = off ? 0 : -1;
 
     $("shelfOut").textContent = n;
     $("range").value = n;
